@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Premier League Matches</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<link rel="shortcut icon" href="images/favicon.jpg" type="image/x-icon" />
+	</head>
+	
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-header">
+				<div class="container">
+					<a class="navbar-brand" href="#">Daniel Buckley</a>
+				</div>
+			</div>
+		</nav>
+		
+		<section>
+			<div id="title" style="text-align: center; margin-top: 10vh;">
+				<h1 id="upcoming"></h1>
+			</div>
+		</section>
+		
+		<section id="fixture-list" style="margin-top: 10vh;">
+			<div class="container">
+				<table id="fixtures" class="table table-hover">
+					<thead>
+						<tr>
+							<th>
+								Home Team
+							</th>		
+							<th>
+								Away Team
+							</th>
+							<th>
+								Date
+							</th>
+							<th>
+								Kick Off
+							</th>
+						</tr>
+					</thead>
+					<tbody id="fixture-body">
+					</tbody>
+				</table>
+			</div>
+		</section>
+		
+		<section>
+			<div id="title" style="text-align: center; margin-top: 10vh;">
+				<h1 id="next"></h1>
+			</div>
+		</section>
+		
+		<section id="fixture-list2" style="margin-top: 10vh;">
+			<div class="container">
+				<table id="fixtures2" class="table table-hover">
+					<thead>
+						<tr>
+							<th>
+								Home Team
+							</th>		
+							<th>
+								Away Team
+							</th>
+							<th>
+								Date
+							</th>
+							<th>
+								Kick Off
+							</th>
+						</tr>
+					</thead>
+					<tbody id="fixture-body2">
+					</tbody>
+				</table>
+			</div>
+		</section>
+		
+		<div style="height: 20vh;"></div>
+	</body>
+	
+	<script src="js/fixtures.js"></script>
+	
+</html>
