@@ -21,8 +21,11 @@ function fixtures(){
 				} 
 				else if (data.fixtures[i].status == "IN_PLAY"){
 					inPlay = true;
-					createTable(["Home Team", "Away Team", "Status"], "inplay-fixture-body", null);
 				}
+			}
+			
+			if (inPlay){
+				createTable(["Home Team", "Away Team", "Status"], "inplay-fixture-body", null);
 			}
 			
 			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body", closetDateObject);
