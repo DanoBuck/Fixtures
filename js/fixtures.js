@@ -1,5 +1,4 @@
 function fixtures(){
-	//const urls = "https://api.football-data.org/v1/fixtures";
 	const urls = "https://api.football-data.org/v1/competitions/445/fixtures";
 	
 	$.ajax({
@@ -10,11 +9,12 @@ function fixtures(){
 		success: function(data){
 			let tableBody = document.getElementById("fixture-body");
 			
-			
+			let counter = 0;
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED"){
 					var closetDate = formatDate(data.fixtures[i].date);
 					var closetDateObject = new Date(data.fixtures[i].date);
+					counter = i;
 					break;
 				}
 			}
@@ -26,6 +26,7 @@ function fixtures(){
 			
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED" && closetDate == formatDate(data.fixtures[i].date)){
+					tableBody = document.getElementById("fixture-body")
 					appendDataToTable(tableBody, data);
 				}
 				else if (nextClosestDate == formatDate(data.fixtures[i].date)){
@@ -34,6 +35,10 @@ function fixtures(){
 					appendDataToTable(tableBody, data);
 					var dayNumber = new Date(data.fixtures[i].date);
 					console.log(getDay(dayNumber.getDay()));
+				}
+				else if(data.fixtures[i].status == "IN_PLAY"){
+					tableBody = document.getElementById("inplay-fixture-body");
+					appendDataToInPlayTable(tableBody, data);
 				}
 			}
 			
@@ -64,6 +69,27 @@ function appendDataToTable(tableBody, data){
 	homeTh.append(awayTeam);
 	homeTh.append(date);
 	homeTh.append(time);
+	
+	tableBody.append(homeTh);
+}
+
+function appendDataToInPlayTable(tableBody, data){
+	let homeTh = document.createElement("tr");
+					
+	let homeTeam = document.createElement("td");
+	getCrest(data.fixtures[i]._links.homeTeam, homeTeam);
+	homeTeam.innerHTML += data.fixtures[i].result.goalsHomeTeam;
+	
+	let awayTeam = document.createElement("td");
+	getCrest(data.fixtures[i]._links.awayTeam, awayTeam);
+	awayTeam.innerHTML += data.fixtures[i].result.goalsAwayTeam;
+	
+	let status = document.createElement("td");
+	status.innerHTML = "In Play";	 
+	
+	homeTh.append(homeTeam);
+	homeTh.append(awayTeam);
+	homeTh.append(status);
 	
 	tableBody.append(homeTh);
 }
