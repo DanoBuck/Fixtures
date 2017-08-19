@@ -9,20 +9,25 @@ function fixtures(){
 		success: function(data){
 			let tableBody = document.getElementById("fixture-body");
 			
-			let counter = 0;
+			let inPlay = false;
+			let closetDate = null;
+			let closetDateObject = null;
+			
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED"){
-					var closetDate = formatDate(data.fixtures[i].date);
-					var closetDateObject = new Date(data.fixtures[i].date);
-					counter = i;
+					closetDate = formatDate(data.fixtures[i].date);
+					closetDateObject = new Date(data.fixtures[i].date);
 					break;
+				} 
+				else if (data.fixtures[i].status == "IN_PLAY"){
+					inPlay = true;
+					createTable(["Home Team", "Away Team", "Status"], "inplay-fixture-body", null);
 				}
 			}
 			
-			let upcoming = document.getElementById("upcoming");
-			upcoming.innerHTML = getDay(closetDateObject.getDay()) + " Premier League Matches";
-			
+			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body", closetDateObject);
 			const nextClosestDate = formatDate(closetDateObject.setDate(closetDateObject.getDate() + 1));
+			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body2", closetDateObject);
 			
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED" && closetDate == formatDate(data.fixtures[i].date)){
@@ -30,20 +35,14 @@ function fixtures(){
 					appendDataToTable(tableBody, data);
 				}
 				else if (nextClosestDate == formatDate(data.fixtures[i].date)){
-					console.log(data.fixtures[i].homeTeamName + " V " + data.fixtures[i].awayTeamName);
 					tableBody = document.getElementById("fixture-body2");
 					appendDataToTable(tableBody, data);
-					var dayNumber = new Date(data.fixtures[i].date);
-					console.log(getDay(dayNumber.getDay()));
 				}
 				else if(data.fixtures[i].status == "IN_PLAY"){
 					tableBody = document.getElementById("inplay-fixture-body");
 					appendDataToInPlayTable(tableBody, data);
 				}
 			}
-			
-			let next = document.getElementById("next");
-			next.innerHTML = getDay(dayNumber.getDay()) + " Premier League Matches";
 					
 			console.log(data);
 		}
@@ -139,6 +138,40 @@ function formatTime(data){
 function getDay(number){
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	return days[number];
+}
+
+function createTable(tableHeaders, id, closetDateObject){
+	console.log("In here");
+	
+	let section = document.getElementById("fixtures");
+	let title = document.createElement("h1");
+	title.setAttribute("style", "text-align: center; margin-top: 15vh;");
+	
+	title.innerHTML = closetDateObject != null ? getDay(closetDateObject.getDay()) + " Premier League Matches" : "In Play Premeier League Matches";
+	
+	let containerDiv = document.createElement("div");
+	containerDiv.setAttribute("class", "container"); 
+	let table = document.createElement("table");
+	table.setAttribute("class", "table table-hover");
+	let thead = document.createElement("thead");
+	let theadTr = document.createElement("tr");
+	let theadTh = null;
+	
+	for(i = 0; i < tableHeaders.length; i++){
+		theadTh = document.createElement("th");
+		theadTh.innerHTML = tableHeaders[i];
+		theadTr.append(theadTh);
+	}
+	
+	let tbody = document.createElement("tbody");
+	tbody.setAttribute("id", id);
+	
+	thead.append(theadTr);
+	table.append(tbody);
+	table.append(thead);
+	containerDiv.append(table);
+	section.append(title);
+	section.append(containerDiv);
 }
 
 fixtures();
