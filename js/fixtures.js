@@ -35,15 +35,15 @@ function fixtures(){
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED" && closetDate == formatDate(data.fixtures[i].date)){
 					tableBody = document.getElementById("fixture-body")
-					appendDataToTable(tableBody, data);
+					appendDataToTable(tableBody, data, false);
 				}
 				else if (nextClosestDate == formatDate(data.fixtures[i].date)){
 					tableBody = document.getElementById("fixture-body2");
-					appendDataToTable(tableBody, data);
+					appendDataToTable(tableBody, data, false);
 				}
 				else if(data.fixtures[i].status == "IN_PLAY"){
 					tableBody = document.getElementById("inplay-fixture-body");
-					appendDataToInPlayTable(tableBody, data);
+					appendDataToTable(tableBody, data, true);
 				}
 			}
 					
@@ -52,46 +52,36 @@ function fixtures(){
 	});
 }
 
-function appendDataToTable(tableBody, data){
+function appendDataToTable(tableBody, data, isInPlay){
 	let homeTh = document.createElement("tr");
 					
 	let homeTeam = document.createElement("td");
 	getCrest(data.fixtures[i]._links.homeTeam, homeTeam);
 	
 	let awayTeam = document.createElement("td");
-	getCrest(data.fixtures[i]._links.awayTeam, awayTeam);
-	
-	let date = document.createElement("td");
-	date.innerHTML = formatDate(data.fixtures[i].date);
-
-	let time = document.createElement("td");
-	time.innerHTML = formatTime(data.fixtures[i].date); 	 
+	getCrest(data.fixtures[i]._links.awayTeam, awayTeam);	 
 	
 	homeTh.append(homeTeam);
 	homeTh.append(awayTeam);
-	homeTh.append(date);
-	homeTh.append(time);
-	
-	tableBody.append(homeTh);
-}
+	if(isInPlay){
+		let status = document.createElement("td");
+		status.innerHTML = "In Play";
+		
+		homeTeam.innerHTML += data.fixtures[i].result.goalsHomeTeam;
+		awayTeam.innerHTML += data.fixtures[i].result.goalsAwayTeam;
+		
+		homeTh.append(status);
+	}
+	else {
+		let date = document.createElement("td");
+		date.innerHTML = formatDate(data.fixtures[i].date);
 
-function appendDataToInPlayTable(tableBody, data){
-	let homeTh = document.createElement("tr");
-					
-	let homeTeam = document.createElement("td");
-	getCrest(data.fixtures[i]._links.homeTeam, homeTeam);
-	homeTeam.innerHTML += data.fixtures[i].result.goalsHomeTeam;
+		let time = document.createElement("td");
+		time.innerHTML = formatTime(data.fixtures[i].date); 
 	
-	let awayTeam = document.createElement("td");
-	getCrest(data.fixtures[i]._links.awayTeam, awayTeam);
-	awayTeam.innerHTML += data.fixtures[i].result.goalsAwayTeam;
-	
-	let status = document.createElement("td");
-	status.innerHTML = "In Play";	 
-	
-	homeTh.append(homeTeam);
-	homeTh.append(awayTeam);
-	homeTh.append(status);
+		homeTh.append(date);
+		homeTh.append(time);
+	}
 	
 	tableBody.append(homeTh);
 }
