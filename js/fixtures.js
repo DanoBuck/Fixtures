@@ -1,3 +1,24 @@
+function results(data){
+	createTable(["Home Team", "Away Team", "Date"], "results", "Results");
+	
+	let matchDay = null;
+	
+	for (i = 0; i < data.fixtures.length; i++){
+		if(data.fixtures[i].status == "TIMED"){
+			matchDay = data.fixtures[i].matchday;
+			break;
+		}
+	}
+	
+	let tableBody = document.getElementById("results");
+	
+	for (i = 0; i < data.fixtures.length; i++){
+		if ((data.fixtures[i].matchday == matchDay || data.fixtures[i].matchday == matchDay-1) && data.fixtures[i].status == "FINISHED"){
+			appendDataToTable(tableBody, data, "results");
+		}
+	}
+} 	
+
 function fixtures(){
 	const urls = "https://api.football-data.org/v1/competitions/445/fixtures";
 	
@@ -7,6 +28,9 @@ function fixtures(){
 		dataType: "json",
 		type: "GET",
 		success: function(data){
+			
+			results(data);
+			
 			let tableBody = document.getElementById("fixture-body");
 			
 			let inPlay = false;
@@ -30,7 +54,8 @@ function fixtures(){
 			
 			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body", closetDateObject);
 			const nextClosestDate = formatDate(closetDateObject.setDate(closetDateObject.getDate() + 1));
-			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body2", closetDateObject);
+			
+			let displayNextFixtures = true;
 			
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED" && closetDate == formatDate(data.fixtures[i].date)){
@@ -38,6 +63,10 @@ function fixtures(){
 					appendDataToTable(tableBody, data, false);
 				}
 				else if (nextClosestDate == formatDate(data.fixtures[i].date)){
+					if(displayNextFixtures){
+						createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body2", closetDateObject);
+						displayNextFixtures = false;
+					}
 					tableBody = document.getElementById("fixture-body2");
 					appendDataToTable(tableBody, data, false);
 				}
@@ -63,7 +92,16 @@ function appendDataToTable(tableBody, data, isInPlay){
 	
 	homeTh.append(homeTeam);
 	homeTh.append(awayTeam);
-	if(isInPlay){
+	if(isInPlay == "results"){
+		let date = document.createElement("td");
+		date.innerHTML = formatDate(data.fixtures[i].date);
+		
+		homeTeam.innerHTML += data.fixtures[i].result.goalsHomeTeam;
+		awayTeam.innerHTML += data.fixtures[i].result.goalsAwayTeam;
+		
+		homeTh.append(date);
+	}
+	else if(isInPlay){
 		let status = document.createElement("td");
 		status.innerHTML = "In Play";
 		
@@ -140,7 +178,7 @@ function createTable(tableHeaders, id, closetDateObject){
 	let title = document.createElement("h1");
 	title.setAttribute("style", "text-align: center; margin-top: 15vh;");
 	
-	title.innerHTML = closetDateObject != null ? getDay(closetDateObject.getDay()) + " Premier League Matches" : "In Play Premeier League Matches";
+	title.innerHTML = closetDateObject == "Results" ? "Last 2 Premier League Results": closetDateObject != null ? getDay(closetDateObject.getDay()) + " Premier League Matches": "In Play Premeier League Matches";
 	
 	let containerDiv = document.createElement("div");
 	containerDiv.setAttribute("class", "container"); 
