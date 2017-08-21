@@ -35,7 +35,7 @@ function fixtures(){
 			let closetDate = null;
 			let closetDateObject = null;
 			
-			for (i = 0; i < data.fixtures.length; i++){
+			for (let i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED"){
 					closetDate = formatDate(data.fixtures[i].date);
 					closetDateObject = new Date(data.fixtures[i].date);
@@ -56,8 +56,7 @@ function fixtures(){
 			
 			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body", closetDateObject);
 			const nextClosestDate = formatDate(closetDateObject.setDate(closetDateObject.getDate() + 1));
-			
-			let displayNextFixtures = true;
+			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body2", closetDateObject);
 			
 			for (i = 0; i < data.fixtures.length; i++){
 				if (data.fixtures[i].status == "TIMED" && closetDate == formatDate(data.fixtures[i].date)){
@@ -65,10 +64,6 @@ function fixtures(){
 					appendDataToTable(tableBody, data, false);
 				}
 				else if (nextClosestDate == formatDate(data.fixtures[i].date)){
-					if(displayNextFixtures){
-						createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body2", closetDateObject);
-						displayNextFixtures = false;
-					}
 					tableBody = document.getElementById("fixture-body2");
 					appendDataToTable(tableBody, data, false);
 				}
