@@ -29,8 +29,6 @@ function fixtures(){
 		type: "GET",
 		success: function(data){
 			
-			results(data);
-			
 			let tableBody = document.getElementById("fixture-body");
 			
 			let inPlay = false;
@@ -50,6 +48,10 @@ function fixtures(){
 			
 			if (inPlay){
 				createTable(["Home Team", "Away Team", "Status"], "inplay-fixture-body", null);
+				results(data);
+			}
+			else {
+				results(data);
 			}
 			
 			createTable(["Home Team", "Away Team", "Date", "Kick Off"], "fixture-body", closetDateObject);
